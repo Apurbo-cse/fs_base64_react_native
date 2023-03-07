@@ -1,34 +1,29 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+//import liraries
+import React, {useEffect} from 'react';
+import FlashMessage from 'react-native-flash-message';
+import {Provider} from 'react-redux';
+import store from './src/redux/store';
+import {saveUserData} from './src/redux/actions/auth';
+import Routes from './src/navigations/routes';
+import { getUserData } from './src/utils/utlits';
 
 const App = () => {
+  useEffect(() => {
+    (async () => {
+      const userData = await getUserData();
+      console.log('user data App.js', userData);
+      if (userData) {
+        saveUserData(userData);
+      }
+    })();
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.btnStyle}>
-        <Text style={styles.textStyle}>Upload Imgae</Text>
-      </TouchableOpacity>
-    </View>
+    <Provider store={store}>
+      <Routes />
+      <FlashMessage position="top" />
+    </Provider>
   );
 };
 
 export default App;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  btnStyle: {
-    backgroundColor: 'blue',
-    height: 48,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    paddingHorizontal: 16,
-  },
-});
